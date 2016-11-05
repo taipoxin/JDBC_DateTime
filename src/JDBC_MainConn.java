@@ -5,6 +5,7 @@
 import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 
@@ -17,6 +18,7 @@ public class JDBC_MainConn {
     //  Database credentials
     static final String USER = "tiranid";
     static final String PASS = "  ";
+    static int size = 0;    // standart big - 0, mini - 1
 
     static ArrayList<String> dateArray = new ArrayList<>();
     static ArrayList<Integer> iterArray = new ArrayList<>();
@@ -71,11 +73,6 @@ public class JDBC_MainConn {
             e.printStackTrace();
         }
 
-
-        // My Inners
-            /*
-
-            */
     }
 
     public static void Charter() {
@@ -102,10 +99,20 @@ public class JDBC_MainConn {
             statement = conn.createStatement();
 
             String sql;
-            if (str.equals("09") | str.equals("10"))
+            int month = 0;
+
+            try {
+                month = Integer.parseInt(str);
+            }
+            catch (NumberFormatException e) {
+                // nothing
+            }
+            if (month > 0 & month < 13) {
                 sql = "SELECT * FROM DateIter " + "WHERE Date REGEXP '(." + str + ")';";
-            else
+            }
+            else {
                 sql = "SELECT * FROM DateIter;";
+            }
 
 
             ResultSet rs = statement.executeQuery(sql);  // sql
@@ -127,7 +134,16 @@ public class JDBC_MainConn {
                 System.out.print("Date: " + date);
                 System.out.println(", Iterations: " + iters);
             }
-            System.out.println("Average Iterations per day: " + sum / count + "\n\n");
+            //sum = sum + 1;
+            System.out.println("Summary count of \niterations | hours to this period: ");
+            //System.out.println("\t   " + sum + " | " + (sum/2) + ":" + (sum % 2) * 3 + "0");
+            System.out.println("\t   " + sum + " | " +  ((double) sum / 2));
+            System.out.println("Average Iterations per day: " + sum / count + "\n");
+            System.out.println("Goodbye!");
+
+            if (count < 16) {   // small chart
+                size = 1;
+            }
             rs.close();
             statement.close();
             conn.close();
@@ -153,36 +169,39 @@ public class JDBC_MainConn {
                 se.printStackTrace();
             }//end finally try
         }//end try
-        System.out.println("Goodbye!");
+        //System.out.println("");
     }//end method
 
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("write:\n\t 1 if you would like to see statistics");
-        System.out.println("\t 0 if you would like add string into table");
-        int i = sc.nextByte();
-        sc.skip("\n");
-        switch (i) {
-            case 0: {
-                // write it like 12.10 (without "" or '')
-                insertInto("DateIter");
+        int i = -1;
+        while (i != 1) {
+            System.out.println("write:\n\t 1 if you would like to see statistics");
+            System.out.println("\t 0 if you would like add string into table");
+            System.out.println("\t something else to quit");
+            try {
+                i = sc.nextByte();
+            } catch (NoSuchElementException e) {    // including InputMismatchException
                 break;
             }
-            case 1: {
-                DateIterBarChart dtbc = new DateIterBarChart();
-                Thread thread = new Thread(dtbc);
+            sc.skip("\n");
+            switch (i) {
+                case 0: {
+                    // write it like 12.10 (without "" or '')
+                    insertInto("DateIter");
+                    break;
+                }
+                case 1: {
+                    DateIterBarChart dtbc = new DateIterBarChart();
+                    Thread thread = new Thread(dtbc);
 
-                Charter();
-                thread.start();
+
+                    Charter();
+                    thread.start();
+                    break;
+                }
             }
         }
-
-
-
     }
 }
-
-
-
-

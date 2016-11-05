@@ -13,24 +13,28 @@ import javafx.stage.Stage;
 
 public class DateIterBarChart extends Application implements Runnable {
 
+    int standartWidth = 1024;
+    int standartHeight = 1000;
+    int miniWidth = 800;
+    int miniHeight= 600;
 
 
     @Override
     public void run() {
         launch();
     }
+
     @Override
     public void start(Stage stage) {
-
-
-
-
+        final int width;
+        final  int height;
         stage.setTitle("DateIterChart");
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
         final BarChart<String,Number> bc =
                 new BarChart<>(xAxis,yAxis);
         bc.setTitle("Performance");
+
         xAxis.setLabel("Date");
         yAxis.setLabel("Iters");
 
@@ -41,7 +45,16 @@ public class DateIterBarChart extends Application implements Runnable {
         series.getData().add(new XYChart.Data(JDBC_MainConn.dateArray.get(i),
                 JDBC_MainConn.iterArray.get(i)));
         }
-        Scene scene  = new Scene(bc,800,600);
+        if (JDBC_MainConn.size == 1) {
+            width = miniWidth;
+            height = miniHeight;
+        }
+        else {
+            width = standartWidth;
+            height = standartHeight;
+        }
+
+        Scene scene  = new Scene(bc,width,height);
         bc.getData().addAll(series);
 
 
