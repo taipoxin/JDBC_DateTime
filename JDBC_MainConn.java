@@ -137,7 +137,7 @@ public class JDBC_MainConn {
             //sum = sum + 1;
             System.out.println("Summary count of \niterations | hours to this period: ");
             //System.out.println("\t   " + sum + " | " + (sum/2) + ":" + (sum % 2) * 3 + "0");
-            System.out.println("\t   " + sum + " | " +  ((double) sum / 2));
+            System.out.println("\t   " + sum + " | " +  (sum * 0.5));
             System.out.println("Average Iterations per day: " + sum / count + "\n");
             System.out.println("Goodbye!");
 
