@@ -1,16 +1,24 @@
 //STEP 1. Import required packages
 
 
-
-import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 
-
+/**
+ * Tested on MySQL.
+ */
 public class JDBC_MainConn {
+    /**
+     * There are:
+     * @param DB_URL - path of your running Database (my db named STATS, and it local)
+     * @param USER  - username for connection
+     * @param PASS  - password for connection
+     *
+     */
+
     // JDBC driver name and database URL
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost/STATS";
@@ -27,9 +35,11 @@ public class JDBC_MainConn {
     public static void insertInto(String table) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Write date, that you would like insert into table");
+        System.out.println("\tExample: 18.10");
         System.out.println("If you don't want add row, print null there");
         String Date = sc.nextLine();
         System.out.println("Write count of iterations");
+        System.out.println("\tExample: 6");
         System.out.println("If you don't want add row, print any number there");
         int iters = sc.nextInt();
         sc.skip("\n");
@@ -107,11 +117,14 @@ public class JDBC_MainConn {
             catch (NumberFormatException e) {
                 // nothing
             }
+            //  Construct query, fix: added ORDERING
             if (month > 0 & month < 13) {
-                sql = "SELECT * FROM DateIter " + "WHERE Date REGEXP '(." + str + ")';";
+                sql = "SELECT * FROM DateIter " + "WHERE Date REGEXP '(." + str + ")' ORDER BY Date;";
             }
+
+            // Bad ORDERING there (Default, table's version
             else {
-                sql = "SELECT * FROM DateIter;";
+                sql = "SELECT * FROM DateIter ORDER BY Date";
             }
 
 
@@ -148,6 +161,7 @@ public class JDBC_MainConn {
             statement.close();
             conn.close();
         }
+        // We're do not see on catch
         catch(SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();

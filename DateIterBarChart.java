@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 
 public class DateIterBarChart extends Application implements Runnable {
 
+    // dynamically changeable width and height
     int standartWidth = 1024;
     int standartHeight = 1000;
     int miniWidth = 800;
